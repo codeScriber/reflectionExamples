@@ -1,7 +1,7 @@
 package com.avg.reflection.pluggable;
 
 public interface ISuperHero {
-	public void doesWhateverSuperHeroDoes();
+	public String doesWhateverSuperHeroDoes();
 	public int getSuperHeroID();
 
 }

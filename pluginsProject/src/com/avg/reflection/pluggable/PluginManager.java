@@ -5,19 +5,18 @@ import java.io.FilenameFilter;
 import java.io.IOException;
 import java.util.Enumeration;
 
-import dalvik.system.DexClassLoader;
+import android.content.Context;
+import android.util.Log;
+import android.util.SparseArray;
 import dalvik.system.DexFile;
 
-import android.content.Context;
-import android.util.SparseArray;
-
 public class PluginManager {
-	private SparseArray<ISuperHero> mPlusings;
+	private SparseArray<ISuperHero> mPlugins;
 	private Context mContext;
 	private File mDexCacheDir;
 
 	public PluginManager(Context context){
-		mPlusings = new SparseArray<ISuperHero>();
+		mPlugins = new SparseArray<ISuperHero>();
 		mContext = context;
 		mDexCacheDir = new File(mContext.getFilesDir(), "dexCache");
 		if( ! mDexCacheDir.exists() ){
@@ -42,12 +41,13 @@ public class PluginManager {
 			}
 		});
 		if( dexFiles.length > 0 ){
-			try{
-				for(File dexFile: dexFiles){
+			for(File dexFile: dexFiles){
+				try{
 					loadFromSingleDexFile(dexFile);
+				}catch(Exception e){
+					Log.e("dex loader", "could not load file:" + dexFile.getName());
+					e.printStackTrace();
 				}
-			}catch(IOException e){
-				e.printStackTrace();
 			}
 		}
 	}
@@ -61,7 +61,7 @@ public class PluginManager {
 			Class<?> clazz = df.loadClass(className, mContext.getClassLoader());
 			if( clazz.isInstance(ISuperHero.class) ){
 				ISuperHero plugin = (ISuperHero)clazz.newInstance();
-				mPlusings.put(plugin.getSuperHeroID(), plugin);
+				mPlugins.put(plugin.getSuperHeroID(), plugin);
 			}
 		}
 
