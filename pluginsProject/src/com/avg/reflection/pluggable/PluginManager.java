@@ -27,6 +27,14 @@ public class PluginManager {
 	public void init(){
 		loadPlugins();
 	}
+	
+	public int[] getPluginsIDS(){
+		int[] ids = new int[mPlugins.size()];
+		for(int i = 0; i < mPlugins.size(); i++ ){
+			ids[i] = mPlugins.keyAt(i);
+		}
+		return ids;
+	}
 
 	private void loadPlugins()  {
 		File pluginsDir = new File(mContext.getFilesDir(), "plugins");
